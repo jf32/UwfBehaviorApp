@@ -10,8 +10,6 @@ import Foundation
 import UIKit
 
 //let getCoursesURL = "http://atcwebapp.argo.uwf.edu/devbcba/api/mobileapi/getCourses/"
-//let path = NSBundle.mainBundle().bundlePath as NSString // it needs be NSString, Swift String doesn't have stringByAppendingPathComponent method
-//let jsonPath = path.stringByAppendingPathComponent("data.json")
 
 enum returnType{
     case IntArray([Int])
@@ -28,8 +26,9 @@ public class GetCourses {
     let jsonLocation: String = "http://atcwebapp.argo.uwf.edu/devbcba/api/mobileapi/getCourses/"
     let titles: NSDictionary
     var titlesArray: [String]
-    var courseIDs : [Int?] = []
+    var courseIDs : [String]
     var counter: Int
+    var finalDict: [String: String]
     
     //MARK: Initialize the GetCourses class
     
@@ -38,16 +37,8 @@ public class GetCourses {
         self.courseIDs = []
         self.titles = titles
         self.titlesArray = []
+        self.finalDict = [:]
     }
-    
-
-    /*
-    init(titles: [NSDictionary?], courseIDs: [Int?]){
-        self.titles = titles
-        self.courseIDs = courseIDs
-    }
-    */
-
     
     /* readJsonCourses
      *  -parameters: NSDicionary of json data with courses
@@ -79,20 +70,37 @@ public class GetCourses {
                         // returnArray and self.titlesArray should be the same
                         returnArray.append(String(thetitle1["title"]!))
                         self.titlesArray.append(String(thetitle1["title"]!))
-                        
                         ++counter
+                        }
+                    }
+                for vidIds in object{
+                    if let vidIds1 = (vidIds.1 as? NSDictionary){
+                        self.courseIDs.append(String(vidIds1["video_id"]!))
                     }
                 }
-        // If status is not "ok" we return the returnType NullVal
-            }else{
+            }
+            else{
                 return .NullVal
             }
         }
+        
+        // Make the dictionary have all titles match
+        //  with their respective 'video_id'
+        createIDtitleDict()
         
         // Sort the return array and the class value 'titlesArray'
         returnArray = returnArray.sort()
         self.titlesArray = returnArray
         return .StringArrayInt(returnArray, ++counter)
+    }
+    
+    private func createIDtitleDict(){
+        var counter2 = 0
+        for id in self.courseIDs{
+            self.finalDict.updateValue(id, forKey: titlesArray[counter2])
+            print("\(counter2 + 1). \(self.titlesArray[counter2])\n\tVideo_id: \(id)")
+            ++counter2
+        }
     }
     
     /* prepareJson
@@ -109,20 +117,11 @@ public class GetCourses {
         do {
             let d1: NSDictionary
             d1 = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments) as! NSDictionary
-        /*
-            switch (x){
-            case 0:
-                readJsonCourses(d1)
-                break
-            default:
-                print("Error with switch in prepareJson")
-            }*/
             return d1
         }catch{
             print("Error in prepareJson (outside switch)")
             return dict
         }
-        //return dict
     }
 
     func returnNumCourses() -> Int{
@@ -131,6 +130,10 @@ public class GetCourses {
     
     func returnTitlesArray() -> [String]?{
         return self.titlesArray
+    }
+    
+    func returnDictWithTitlesAndIDs() -> [String: String]{
+        return self.finalDict
     }
     
     /*
