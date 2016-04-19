@@ -14,7 +14,12 @@
  *      The custom operator is this: <~~ (defined below)
  *      For every level of parsing (top level, second, third, so on),
  *      create a swift file with a struct that inherits from 'Parser'.
+ *      Or you may use one swift file.
  *      I will show an example in class.
+ * custom operators:
+ *          <~~json
+ *          <~~container
+ *          <~~id
  ******************************************************/
 
 import Foundation
@@ -23,17 +28,18 @@ import UIKit
 /*
 let path = "http://atcwebapp.argo.uwf.edu/devbcba/api/mobileapi/getCourses/" as NSString // path for JSON file
 let jsonPath = path.stringByAppendingPathComponent("courses.json")
-//typealias Payload = [String: AnyObject]
+typealias Payload = [String: AnyObject]
 var data = NSData()
 */
 
 public typealias JSON = [String : AnyObject]
+
 public struct Parser {
     
     // MARK: - Parsers
     
-    // Decode JSON to an optional type
-    public static func decode<T>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> T? {
+    // Parse JSON to an optional type
+    public static func parse<T>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> T? {
         return {
             json in
             
@@ -46,7 +52,7 @@ public struct Parser {
     }
     
     // Decode JSON to value type
-    public static func decodeDecodable<T: Decodable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> T? {
+    public static func parseParseable<T: Parseable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> T? {
         return {
             json in
             
@@ -60,7 +66,7 @@ public struct Parser {
     }
     
     // Decode JSON to date type
-    public static func decodeDate(key: String, dateFormatter: NSDateFormatter, keyPathDelimiter: String = PathDelimiter()) -> JSON -> NSDate? {
+    public static func parseDate(key: String, dateFormatter: NSDateFormatter, keyPathDelimiter: String = PathDelimiter()) -> JSON -> NSDate? {
         return {
             json in
             
@@ -73,7 +79,7 @@ public struct Parser {
     }
      
     // Decode JSON to enum type
-    public static func decodeEnum<T: RawRepresentable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> T? {
+    public static func parseEnum<T: RawRepresentable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> T? {
         return {
             json in
             
@@ -86,7 +92,7 @@ public struct Parser {
     }
     
     // Decode JSON to URL
-    public static func decodeURL(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> NSURL? {
+    public static func parseURL(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> NSURL? {
         return {
             json in
             
@@ -100,7 +106,7 @@ public struct Parser {
     }
     
     // Decode JSON to array
-    public static func decodeDecodableArray<T: Decodable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [T]? {
+    public static func parseParseableArray<T: Parseable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [T]? {
         return {
             json in
             
@@ -121,7 +127,7 @@ public struct Parser {
     }
     
     // Decodes JSON to optional Dictionary Type
-    public static func decodeDecodableDictionary<T:Decodable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [String:T]? {
+    public static func parseParseableDictionary<T:Parseable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [String:T]? {
         return {
             json in
             
@@ -130,17 +136,17 @@ public struct Parser {
             }
             
             return dictionary.flatMap { (key, value) in
-                guard let decoded = T(json: value) else {
+                guard let parsed = T(json: value) else {
                     return nil
                 }
                 
-                return (key, decoded)
+                return (key, parsed)
             }
         }
     }
     
     // Decode JSON to enum Array Type
-    public static func decodeEnumArray<T: RawRepresentable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [T]? {
+    public static func parseEnumArray<T: RawRepresentable>(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [T]? {
         return {
             json in
             
@@ -161,7 +167,7 @@ public struct Parser {
     }
     
     // Decode JSON to date Array
-    public static func decodeDateArray(key: String, dateFormatter: NSDateFormatter, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [NSDate]? {
+    public static func parseDateArray(key: String, dateFormatter: NSDateFormatter, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [NSDate]? {
         return {
             json in
             
@@ -182,16 +188,16 @@ public struct Parser {
     }
     
     // Decode to old date array (not necessary)
-    public static func decodeDateISO8601Array(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [NSDate]? {
+    public static func parseDateISO8601Array(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [NSDate]? {
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         
-        return Parser.decodeDateArray(key, dateFormatter: dateFormatter, keyPathDelimiter: keyPathDelimiter)
+        return Parser.parseDateArray(key, dateFormatter: dateFormatter, keyPathDelimiter: keyPathDelimiter)
     }
     
     // Decode JSON to URL array
-    public static func decodeURLArray(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [NSURL]? {
+    public static func parseURLArray(key: String, keyPathDelimiter: String = PathDelimiter()) -> JSON -> [NSURL]? {
         return {
             json in
             
@@ -217,55 +223,55 @@ public struct Parser {
 infix operator <~~ { associativity left precedence 150 }
 
 public func <~~ <T>(key: String, json: JSON) -> T? {
-    return Parser.decode(key)(json)
+    return Parser.parse(key)(json)
 }
 /*
  * Operator to make JSON decodable
  */
-public func <~~ <T: Decodable>(key: String, json: JSON) -> T? {
-    return Parser.decodeDecodable(key)(json)
+public func <~~ <T: Parseable>(key: String, json: JSON) -> T? {
+    return Parser.parseParseable(key)(json)
 }
 
 /*
  * Operator to make JSON enum
  */
 public func <~~ <T: RawRepresentable>(key: String, json: JSON) -> T? {
-    return Parser.decodeEnum(key)(json)
+    return Parser.parseEnum(key)(json)
 }
 
 /*
  * Operator JSON to NSURL
  */
 public func <~~ (key: String, json: JSON) -> NSURL? {
-    return Parser.decodeURL(key)(json)
+    return Parser.parseURL(key)(json)
 }
 
 /*
  * Operator for decoding JSON enum array vals
  */
 public func <~~ <T: RawRepresentable>(key: String, json: JSON) -> [T]? {
-    return Parser.decodeEnumArray(key)(json)
+    return Parser.parseEnumArray(key)(json)
 }
 
 /*
  * Operator for JSON to decodable array
  */
-public func <~~ <T: Decodable>(key: String, json: JSON) -> [T]? {
-    return Parser.decodeDecodableArray(key)(json)
+public func <~~ <T: Parseable>(key: String, json: JSON) -> [T]? {
+    return Parser.parseParseableArray(key)(json)
 }
 
 /*
  * JSON to array of URLs
  */
 public func <~~ (key: String, json: JSON) -> [NSURL]? {
-    return Parser.decodeURLArray(key)(json)
+    return Parser.parseURLArray(key)(json)
 }
 
 /*
  * JSON to dictionary of string array
  */
-public func <~~ <T: Decodable>(key: String, json: JSON) -> [String : T]? {
-    return Parser.decodeDecodableDictionary(key)(json)
+public func <~~ <T: Parseable>(key: String, json: JSON) -> [String : T]? {
+    return Parser.parseParseableDictionary(key)(json)
 }
 
 
@@ -323,7 +329,7 @@ public extension Dictionary{
         var keys = keyPath.componentsSeparatedByString(delimiter)
         
         guard let first = keys.first as? Key else {
-            print("[Gloss] Unable to use string as key on type: \(Key.self)")
+            print("Unable to use string as key on type: \(Key.self)")
             return
         }
         
@@ -352,8 +358,8 @@ public extension Dictionary{
 }
 
 // Returns array of instances from JSON array
-//  but only ones that are successfully decoded
-public extension Array where Element: Decodable {
+//  but only ones that are successfully parsed
+public extension Array where Element: Parseable {
 
     static func fromJSONArray(jsonArray: [JSON]) -> [Element] {
         var models: [Element] = []
@@ -372,8 +378,8 @@ public extension Array where Element: Decodable {
 }
 
 
-// Decodable returns a new JSON Decodable object
-public protocol Decodable {
+// Parseable returns a new JSON Parseable object
+public protocol Parseable {
     init?(json: JSON)
 }
 
@@ -529,4 +535,33 @@ enum jsonCourseData{
         task.resume()
     }
 }
+
+
+//
+let requestURL: NSURL = NSURL(string: "http://www.learnswiftonline.com/Samples/subway.json")!
+let urlRequest: NSMutableURLRequest = NSMutableURLRequest(URL: requestURL)
+let session = NSURLSession.sharedSession()
+let task = session.dataTaskWithRequest(urlRequest) {
+(data, response, error) -> Void in
+
+let httpResponse = response as! NSHTTPURLResponse
+let statusCode = httpResponse.statusCode
+
+if (statusCode == 200) {
+print("Everyone is fine, file downloaded successfully.")
+}
+}
+
+}
+
+// json to NSData
+func jsonToNSData(json: AnyObject) -> NSData?{
+do {
+return try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted)
+} catch let myJSONError {
+print(myJSONError)
+}
+return nil;
+}
+task.resume()
 */

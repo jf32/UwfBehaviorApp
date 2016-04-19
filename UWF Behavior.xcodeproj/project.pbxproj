@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D4CE7D81CB6E26900F15220 /* parseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4CE7D71CB6E26900F15220 /* parseJSON.swift */; };
+		0D3E0B171CC170DE0030725D /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3E0B161CC170DE0030725D /* Test.swift */; };
+		0D4CE7DC1CB7360D00F15220 /* GetCourses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4CE7DB1CB7360D00F15220 /* GetCourses.swift */; };
+		0D4CE7DF1CB8304500F15220 /* getCourses.json in Resources */ = {isa = PBXBuildFile; fileRef = 0D4CE7DE1CB8304500F15220 /* getCourses.json */; };
 		1A82064D1CAE1ACB00D69F64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82064C1CAE1ACB00D69F64 /* AppDelegate.swift */; };
 		1A82064F1CAE1ACB00D69F64 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82064E1CAE1ACB00D69F64 /* ViewController.swift */; };
 		1A8206521CAE1ACB00D69F64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A8206501CAE1ACB00D69F64 /* Main.storyboard */; };
@@ -16,7 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0D4CE7D71CB6E26900F15220 /* parseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = parseJSON.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0D3E0B161CC170DE0030725D /* Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		0D4CE7DB1CB7360D00F15220 /* GetCourses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCourses.swift; sourceTree = "<group>"; };
+		0D4CE7DE1CB8304500F15220 /* getCourses.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getCourses.json; path = ../../../../Desktop/getCourses.json; sourceTree = "<group>"; };
 		1A8206491CAE1ACB00D69F64 /* UWF Behavior.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UWF Behavior.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A82064C1CAE1ACB00D69F64 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A82064E1CAE1ACB00D69F64 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -37,9 +41,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D4CE7DD1CB82E1100F15220 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0D4CE7DE1CB8304500F15220 /* getCourses.json */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		1A8206401CAE1ACB00D69F64 = {
 			isa = PBXGroup;
 			children = (
+				0D4CE7DD1CB82E1100F15220 /* Resources */,
 				1A82064B1CAE1ACB00D69F64 /* UWF Behavior */,
 				1A82064A1CAE1ACB00D69F64 /* Products */,
 			);
@@ -62,7 +75,8 @@
 				1A8206531CAE1ACB00D69F64 /* Assets.xcassets */,
 				1A8206551CAE1ACB00D69F64 /* LaunchScreen.storyboard */,
 				1A8206581CAE1ACB00D69F64 /* Info.plist */,
-				0D4CE7D71CB6E26900F15220 /* parseJSON.swift */,
+				0D4CE7DB1CB7360D00F15220 /* GetCourses.swift */,
+				0D3E0B161CC170DE0030725D /* Test.swift */,
 			);
 			path = "UWF Behavior";
 			sourceTree = "<group>";
@@ -128,6 +142,7 @@
 				1A8206571CAE1ACB00D69F64 /* LaunchScreen.storyboard in Resources */,
 				1A8206541CAE1ACB00D69F64 /* Assets.xcassets in Resources */,
 				1A8206521CAE1ACB00D69F64 /* Main.storyboard in Resources */,
+				0D4CE7DF1CB8304500F15220 /* getCourses.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,9 +153,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0D4CE7D81CB6E26900F15220 /* parseJSON.swift in Sources */,
 				1A82064F1CAE1ACB00D69F64 /* ViewController.swift in Sources */,
 				1A82064D1CAE1ACB00D69F64 /* AppDelegate.swift in Sources */,
+				0D3E0B171CC170DE0030725D /* Test.swift in Sources */,
+				0D4CE7DC1CB7360D00F15220 /* GetCourses.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
